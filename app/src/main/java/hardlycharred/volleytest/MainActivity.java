@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             text = (TextView) findViewById(R.id.textView);
             text.setText("Settings");
-            ;
             return true;
         }
 
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-            String url ="https://jsonplaceholder.typicode.com/posts/1";
+            String url ="http://10.0.2.2:8081/customers/06bf537b-c7d7-11e7-ff13-2d957f9ff0f0";
             text = (TextView) findViewById(R.id.textView);
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     text.setText("That didn't work!");
                 }
             });
-// Add the request to the RequestQueue.
+            // Add the request to the RequestQueue.
             queue.add(stringRequest);
             return null;
         }
