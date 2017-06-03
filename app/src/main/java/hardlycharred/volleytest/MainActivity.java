@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +16,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,15 +74,21 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-            String url ="http://10.0.2.2:8081/customers/06bf537b-c7d7-11e7-ff13-2d957f9ff0f0";
+            String url ="http://10.0.2.2:8081/customers/06bf537b-c7d7-11e7-ff13-2d957f9ff0f0/coupons";
             text = (TextView) findViewById(R.id.textView);
             // Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
+            JsonArrayRequest jsObjRequest = new JsonArrayRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
                         @Override
-                        public void onResponse(String response) {
+                        public void onResponse(JSONArray response) {
                             // Display the first 500 characters of the response string.
-                            text.setText("Response is: "+ response.toString());
+                            try {
+                                Log.d("returned", response.toString());
+                                JSONObject jsonObject = response.getJSONObject(1);
+                                text.setText("Points are: "+ jsonObject.get("points"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -87,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             // Add the request to the RequestQueue.
-            queue.add(stringRequest);
+            queue.add(jsObjRequest);
             return null;
         }
     }
